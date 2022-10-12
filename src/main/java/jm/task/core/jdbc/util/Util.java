@@ -3,17 +3,23 @@ import org.hibernate.Session;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class Util {
     static private Connection connection;
     static private Session session;
-
+    private static Util util;
     private static final String URL = "jdbc:mysql://localhost:3306/jaja";
     private static final String USERNAME = "root";
     private static final String PASSWORD = "12345678";
 
-    private Util() {
-
+        public static Util getUtil() {
+            if (util == null) {
+                util = new Util();
+            }
+            return util;
+        }
+    public Util () {
     }
 
     public static Connection getConnection() {
@@ -27,12 +33,12 @@ public class Util {
 
         return connection;
     }
-
-    public static void closeConnection() {
+    public static Statement getStatement() {
         try {
-            connection.close();
+            return getConnection().createStatement();
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
+
 }
